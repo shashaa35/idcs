@@ -22,7 +22,8 @@ def update_acl(acl_id, ip):
     ec2 = boto3.resource('ec2')
     acl = ec2.NetworkAcl(acl_id)
     entries = sorted(acl.entries,key=sortFunc)
-    smallest_rule_number = entries[0]['RuleNumber']
+    ingress_entries = filter(lambda d: d['Egress'] == False, entries)
+    smallest_rule_number = ingress_entries[0]['RuleNumber']
     print "smallest rule number is "+ str(smallest_rule_number)
     if smallest_rule_number < 20 :
         response = "Rule cannot be added"
